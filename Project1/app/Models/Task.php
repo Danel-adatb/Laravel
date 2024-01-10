@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
+
+    //Which properties can be mass changed or modified and which not!
+    protected $fillable = ['title', 'description', 'long_description'];
+    //All the sensitive informations: (guarded)
+    //protected $guarded = ['secret / password'];
 }

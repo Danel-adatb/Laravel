@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -30,13 +31,18 @@ Route::get('/tasks', function() {
 
 Route::view('/tasks/create', 'create')->name('tasks.create');
 
-Route::get('/tasks/{id}/edit', function($id) {
+//Route Model binding: {id} -> {task} ... Task $task
+
+//This way Model fetching is done automatically
+//Define the {task} not take it as an ID in Task.php
+//Used if we want to fetch one single 'Task'
+Route::get('/tasks/{task}/edit', function(Task $task) {
     return view('edit', [
-        'task' => Task::findOrFail($id)
+        'task' => $task
     ]);
 })->name('tasks.edit');
 
-Route::get('/tasks/{id}', function($id) {
+Route::get('/tasks/{task}', function(Task $task) {
     //Laravel Query
     /*$task = collect($tasks)->firstWhere('id', $id);
 
@@ -45,15 +51,14 @@ Route::get('/tasks/{id}', function($id) {
         abort(Response::HTTP_NOT_FOUND);
     }*/
 
-    return view('show', ['task' => Task::findOrFail($id)]);
+    return view('show', ['task' => $task]);
 })->name('tasks.show');
 
-Route::post('/tasks', function(Request $request) {
-    $data = $request->validate([
-        'title' => 'required|max:255',
-        'description' => 'required',
-        'long_description' => 'required'
-    ]);
+Route::post('/tasks', function(TaskRequest $request) {
+    //Validation part is in the app/Http/Request/TaskRequest.php file, made as a rule!
+    // php artisan make:request TaskRequest
+
+    /*$data = $request->validated();
 
     $task = new Task;
 
@@ -61,27 +66,36 @@ Route::post('/tasks', function(Request $request) {
     $task->description = $data['description'];
     $task->long_description = $data['long_description'];
 
-    $task->save();
+    $task->save();*/
 
-    return redirect()->route('tasks.show', ['id' => $task->id])
+    //Task.php to make it work!!
+    $task = Task::create($request->validated());
+
+    return redirect()->route('tasks.show', ['task' => $task->id])
         ->with('success', 'Task created successfully!');
 })->name('tasks.store');
 
-Route::put('/tasks/{id}', function(Request $request, $id) {
-    $data = $request->validate([
-        'title' => 'required|max:255',
-        'description' => 'required',
-        'long_description' => 'required'
-    ]);
+Route::put('/tasks/{task}', function(TaskRequest $request, Task $task) {
+    //Validation part is in the app/Http/Request/TaskRequest.php file, made as a rule!
+    // php artisan make:request TaskRequest
 
-    $task = Task::findOrFail($id);
+    /*$data = $request->validated();
 
     $task->title = $data['title'];
     $task->description = $data['description'];
     $task->long_description = $data['long_description'];
 
-    $task->save();
+    $task->save();*/
 
-    return redirect()->route('tasks.show', ['id' => $task->id])
+    //Task.php to make it work!!
+    $task->update($request->validated());
+
+    return redirect()->route('tasks.show', ['task' => $task->id])
         ->with('success', 'Task updated successfully!');
 })->name('tasks.update');
+
+Route::delete('/tasks/{task}', function(Task $task) {
+    $task->delete();
+
+    return redirect()->route('tasks.index')->with('success', 'Task deleted succesfully!');
+})->name('tasks.delete');
