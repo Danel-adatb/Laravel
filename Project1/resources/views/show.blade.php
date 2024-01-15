@@ -3,51 +3,54 @@
 @section('title', $task->title)
 
 @section('content')
+    <nav class="mb-4">
+        <a href=" {{ route('tasks.index') }} "
+        class="btn">
+            Back to task list!
+        </a>
+    </nav>
+
     <div>
-        <p> {{ $task->description }} </p>
+        <p class="mb-4 text-slate-700"> {{ $task->description }} </p>
     </div>
 
     @if($task->long_description)
         <div>
-            <p> {{ $task->long_description }} </p>
+            <p class="mb-4 text-slate-700"> {{ $task->long_description }} </p>
         </div>
     @endif
 
     <div>
-        <p> {{ $task->created_at }} </p>
+        <p class="text-sm text-slate-500"> Created at: {{ $task->created_at->diffForHumans() }} </p>
     </div>
 
     <div>
-        <p> {{ $task->updated_at }} </p>
+        <p class="mb-4 text-sm text-slate-500"> Updated at: {{ $task->updated_at->diffForHumans() }} </p>
     </div>
 
-    <div>
+    <div class="mb-4">
         @if ($task->completed)
-            Completed
+            <span class="font-medium text-green-500">Completed</span>
         @else
-            Not Completed
+            <span class="font-medium text-red-500">Not completed</span>
         @endif
     </div>
 
-    <div>
-        <a href=" {{ route('tasks.edit', ['task' => $task]) }} ">Edit</a>
-    </div>
+    <div class="flex gap-2">
+        <a class="btn" href=" {{ route('tasks.edit', ['task' => $task]) }} ">Edit</a>
 
-    <div>
         <form method="POST" action=" {{ route('tasks.toggle', ['task' => $task]) }} ">
             @csrf
             @method('PUT')
-            <button type="submit">
+            <button type="submit" class="btn">
                 Mark as {{ $task->completed ? 'not completed' : 'completed' }}
             </button>
         </form>
-    </div>
 
-    <div>
         <form method="POST" action=" {{ route('tasks.delete', ['task' => $task]) }} ">
             @csrf
             @method('DELETE')
-            <button type="submit">Delete Task</button>
+            <button type="submit" class="btn">Delete Task</button>
         </form>
     </div>
 @endsection
