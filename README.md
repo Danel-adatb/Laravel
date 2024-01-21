@@ -1,0 +1,1 @@
+- When you only need a few datas from the database use 'lazy loading' -> eager loading
