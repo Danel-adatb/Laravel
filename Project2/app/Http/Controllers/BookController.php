@@ -13,11 +13,29 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $title = $request->input('title');
+        $filter = $request->input('filter', '');
+
         //If the $title is null it won't run the function, othervise it will (when() method's logic)
+        //You see the when() methods working logic when you search for a Title!
         $books = Book::when(
             $title,
             fn($query, $title) => $query->title($title)
-        )->get();
+        );
+
+        /**
+         * HERE IS THE LOGIC OF THE FILTERING
+         */
+        //match() is like a switch() just it lets you return a value!
+        //It is NOT a function it is a STATEMENT
+        $books = match($filter) {
+            'popular_last_month' => $books->popularLastMonth(),
+            'popular_last_6_months' => $books->popularLast6Months(),
+            'highest_rated_last_month' => $books->highestRatingLastMonth(),
+            'highest_rated_last_6_months' => $books->highestRatingLast6Months(),
+            default => $books->latest()
+        };
+
+        $books = $books->get();
 
         //Call the view names the same as the route names (Commonly used Laravel convention that you should name the view the same as the route)
         return view('books.index', /*OR*/['books' => $books]);
