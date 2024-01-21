@@ -4,3 +4,4 @@
 - php artisan tinker ... you can use the Models query (find(), reviews, etc...)
 - protected $fillable = []; -> its a property in a Model that lets you specify, that these can be mass assigned
 - toSql() -> what was the actual query that has been run
+- Local query scopes -> writing SQL with help of Laravel, in the Models -> scopeSomething($argument).... 
