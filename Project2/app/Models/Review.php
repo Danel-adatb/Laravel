@@ -9,6 +9,9 @@ class Review extends Model
 {
     use HasFactory;
 
+    //Lets you specify that these can be mass assigned
+    protected $fillable = ['review', 'rating'];
+
     public function book() {
         return $this->belongsTo(Book::class);
     }
