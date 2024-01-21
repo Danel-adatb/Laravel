@@ -20,4 +20,7 @@
 -   For Example: index, show, create, store, etc...
 -   Route names are automatically is created for you example.store, example.show, etc...
 -   Implementing them: Route::resource('books', BookController::class);
+-   Also supports nested routes (for example you read reviews that are attached to books) -> it will be easy to create URLs that reflect that
+-   Also allows partial resource routes
+-   You should use resource controllers always ALL THE TIME in Laravel
 
