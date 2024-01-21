@@ -4,4 +4,10 @@
 - php artisan tinker ... you can use the Models query (find(), reviews, etc...)
 - protected $fillable = []; -> its a property in a Model that lets you specify, that these can be mass assigned
 - toSql() -> what was the actual query that has been run
-- Local query scopes -> writing SQL with help of Laravel, in the Models -> scopeSomething($argument).... 
+- Local query scopes -> writing SQL with help of Laravel, in the Models -> scopeSomething($argument)....
+
+- Some refresh:
+-   php artisan make:controller ExampleController ----- to make a contorller in Laravel, this is where the logic is (App\Http\Controllers
+-   You handle here the request by writing methods (actions)
+-   Models handle data
+-   View is the outlook --- that is all called MVC pattern
