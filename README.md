@@ -40,4 +40,6 @@
  
     * Can be applied to: routing, blade rendering (internally, wouldn't even noticing), database actions
     * We can use it explicitily in this project
+ 
+    * For example Redis or Memcached that are key value stores and gives fast access to the data
 
