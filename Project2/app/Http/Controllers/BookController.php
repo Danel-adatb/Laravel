@@ -32,7 +32,7 @@ class BookController extends Controller
             'popular_last_6_months' => $books->popularLast6Months(),
             'highest_rated_last_month' => $books->highestRatingLastMonth(),
             'highest_rated_last_6_months' => $books->highestRatingLast6Months(),
-            default => $books->latest()
+            default => $books->latest()->withAvgRated()->withReviewsCount()
         };
 
         //$books = $books->get();
@@ -86,7 +86,7 @@ class BookController extends Controller
      *
      * As long as the lazy loadings don't eat up your resources of the dabase or the server it is totally fine to use them
      */
-    public function show(Book $book)
+    public function show(int $id)
     {
         //We load one single book model, with a specific relationship (reviews), but
         //in our case it is already loaded in the arguments
@@ -101,10 +101,17 @@ class BookController extends Controller
         //Caching the reviews the same way as in the index
         //Meaning that the reviews data that you see on a single book page will be served from a cache for an hour (3600 sec)
         //After that hour the new query to the database will be run for someone that visits this page and then will be stored for another hour
-        $cacheKey = 'book:' . $book->id;
-        $book = cache()->remember($cacheKey, 3600, fn() => $book->load([
-            'reviews' => fn($query) => $query->latest()
-        ]));
+        $cacheKey = 'book:' . $id;
+        $book = cache()->remember(
+            $cacheKey,
+            3600,
+            fn() =>
+            Book::with([
+                'reviews' => fn($query) => $query->latest()
+            ])->withAvgRated()->withReviewsCount()->findOrFail($id)
+        );
+
+        //with() is the way to fetch relations together with the Model at the same time
 
         return view('books.show', ['book' => $book]);
     }
