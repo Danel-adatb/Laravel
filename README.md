@@ -43,5 +43,5 @@
  
     * For example Redis or Memcached that are key value stores and gives fast access to the data
  
-    * We need to invalidate the cache when for example a data is changed in the database, so we have to display the new data immediately
+    * We need to invalidate the cache when for example a data is changed in the database, so we have to display the new data immediately (Eloquent: Events on the Laravel page)
 
