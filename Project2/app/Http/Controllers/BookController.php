@@ -35,7 +35,20 @@ class BookController extends Controller
             default => $books->latest()
         };
 
-        $books = $books->get();
+        //$books = $books->get();
+        /**
+         * We store the books inside the cache for an hour (3600 sec), so we prevent all the time loading when the page is loaded
+         * It checks if the cache contains the books, if yes we dont have to load it, if we dont, then we laod it
+         *
+         * User experience problem, filter wouldn't work properly
+         * (solution for that is the cacheKey logic, because the key also contains the title and filter)
+         * Also we mustn't cache data that is private or not public
+         * We can display some private data to different users in this way
+         */
+
+         //If a lot of people are looking for (there is a popular search, popular new book, etc.), we will have just the cached result to load
+        $cacheKey = 'books:' . $filter . ':' . $title;
+        $books = cache()->remember($cacheKey, 3600, fn() => $books->get());
 
         //Call the view names the same as the route names (Commonly used Laravel convention that you should name the view the same as the route)
         return view('books.index', /*OR*/['books' => $books]);
@@ -64,10 +77,36 @@ class BookController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * The lazy loading:
+     * When we access the relationship name by the property name, not by a method (for example: foreach($book->reviews as $review))
+     * Laravel will lazy load all the related relations of a particual book
+     * In that moment it makes the query when it encounters (that property being accessed) - Amikor odaér a kód és lefuttatja parasztosan
+     * It also happens in blades
+     *
+     * As long as the lazy loadings don't eat up your resources of the dabase or the server it is totally fine to use them
      */
-    public function show(string $id)
+    public function show(Book $book)
     {
-        //
+        //We load one single book model, with a specific relationship (reviews), but
+        //in our case it is already loaded in the arguments
+        //Book::with('reviews')->findOrFail(); P#1 Example
+
+        //load() method lets you load certain relations
+        //With this solution there would be no separate lazy loading in Blade, but instantly loads here
+        //This solution would work perfectly if we say we have 100 or even more books, so the good performance is a must
+        //Also we order by the reviews here!
+        //Also this is the way to filter an already loaded model, with the same logic as here
+
+        //Caching the reviews the same way as in the index
+        //Meaning that the reviews data that you see on a single book page will be served from a cache for an hour (3600 sec)
+        //After that hour the new query to the database will be run for someone that visits this page and then will be stored for another hour
+        $cacheKey = 'book:' . $book->id;
+        $book = cache()->remember($cacheKey, 3600, fn() => $book->load([
+            'reviews' => fn($query) => $query->latest()
+        ]));
+
+        return view('books.show', ['book' => $book]);
     }
 
     /**
