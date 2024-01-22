@@ -24,3 +24,24 @@
 -   Also allows partial resource routes
 -   You should use resource controllers always ALL THE TIME in Laravel
 
+-   The lazy loading:
+     * When we access the relationship name by the property name, not by a method (for example: foreach($book->reviews as $review))
+     * Laravel will lazy load all the related relations of a particual book
+     * In that moment it makes the query when it encounters (that property being accessed) - Amikor odaér a kód és lefuttatja parasztosa
+ 
+- Caching:
+    * Mechanism of storing some information in some temporary storage
+    * More efficient then a main storage
+    * Takes up big resources of your for example CPU to retreive this data every single time
+    * This is the case where we use cache
+    * So it doesn't change that often, for eaxmple using just a plain key
+ 
+    * In a relational database we only use a single key, and bypassing this key we retrieve data which often is kept inside a memory that is super fast
+ 
+    * Can be applied to: routing, blade rendering (internally, wouldn't even noticing), database actions
+    * We can use it explicitily in this project
+ 
+    * For example Redis or Memcached that are key value stores and gives fast access to the data
+ 
+    * We need to invalidate the cache when for example a data is changed in the database, so we have to display the new data immediately (Eloquent: Events on the Laravel page)
+
