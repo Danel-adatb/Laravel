@@ -24,3 +24,8 @@
 -   Also allows partial resource routes
 -   You should use resource controllers always ALL THE TIME in Laravel
 
+-   The lazy loading:
+     * When we access the relationship name by the property name, not by a method (for example: foreach($book->reviews as $review))
+     * Laravel will lazy load all the related relations of a particual book
+     * In that moment it makes the query when it encounters (that property being accessed) - Amikor odaér a kód és lefuttatja parasztosan
+
