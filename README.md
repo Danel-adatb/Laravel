@@ -45,3 +45,18 @@
  
     * We need to invalidate the cache when for example a data is changed in the database, so we have to display the new data immediately (Eloquent: Events on the Laravel page)
 
+ - Components:
+    * You don't have to register this template, you can use it in any Blade php page wherever you want
+    * Components are very good for:
+    * Reusing
+    * Passing data to them
+  
+- Scoping of resource routes
+    * For example a resource controller can be used, but we don't have the review relation by itself, meaning, as a normal controller it cannot be connected to a Model that doesn't exist, in this case we use the Scope resource Route
+    * Laravel configures out the connection between Reviews and Book
+
+- Rate limiting
+    * We create a rate limiting on RouteServiceProvider.php, and then in ReviewController we apply this limiter to the store method
+    * For the RouteServiceProvider.php (aka Rate limiter) we have to specify a construct
+    * We can also define different groups, for example 3 reviews posted in every hour, or 1 book per day.... etc.
+    * Rate limiting is often used with APIs, to not overuse your system
