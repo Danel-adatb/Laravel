@@ -1,4 +1,30 @@
 RestAPI Application step-by-step:
 - composer create-project --prefer-dist laravel/laravel Project3-API
 - .env file modifications, database name, username, password
-- php artisan migrate (to create database and tables)
+- php artisan migrate (to create database)
+- Creating the Models: (with migretaion)
+  * php artisan make:model Event -m
+  * php artisan make:model Attendee -m
+- Creating the Controllers: (--api) -> creates a resource controller, but we dont have create and edit forms, because we just send data
+  * php artisan make:controller Api/AttendeeController --api
+  * php artisan make:controller Api/EventController --api
+
+- Coding the migrations
+ * Adding columns (database/migrations/...)
+
+- Adding the relations to the Models
+ * hasMany() one-to-many relation for example (app/Models/...)
+ * belongsTo() one-to-one / many-to-one (the Model that calls the method is the owned one, meaning that Model holds the key for the owning Model)
+ * For Example: attendess do not exist on their own, they always need to be part of an event
+
+- Adding the Routing:
+ * We are building an API in this project so we don't use the web.php, but the api.php (routes/...)
+ * scoped(['' => '']) ---- meaning that an Attendee and the resource are always part of an Event
+ * APIs don't use user sessions, they use instead tokens
+
+- Factories and Seeders (database/factories/... OR database/seeders/...)
+ * This is more important for testing, local developing to seed datas into database, to let us have something to work with
+ * php artisan make:factory EventFactory  --model=Event (with specifying for the Event Model)
+ * php artisan make:seeder EventSeeder
+ * php artisan make:seeder AttendeeSeeder
+ * Used classes: EventFactory, EventSeeder, AttendeeSeeder, DatabaseSeeder, events and attendees migrations
