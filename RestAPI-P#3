@@ -1,0 +1,4 @@
+RestAPI Application step-by-step:
+- composer create-project --prefer-dist laravel/laravel Project3-API
+- .env file modifications, database name, username, password
+- php artisan migrate (to create database and tables)
