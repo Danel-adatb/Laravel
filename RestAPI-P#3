@@ -1,4 +1,10 @@
 RestAPI Application step-by-step:
 - composer create-project --prefer-dist laravel/laravel Project3-API
 - .env file modifications, database name, username, password
-- php artisan migrate (to create database and tables)
+- php artisan migrate (to create database)
+- Creating the Models: (with migretaion)
+  * php artisan make:model Event -m
+  * php artisan make:model Attendee -m
+- Creating the Controllers: (--api) -> creates a resource controller, but we dont have create and edit forms, because we just send data
+  * php artisan make:controller Api/AttendeeController --api
+  * php artisan make:controller Api/EventController --api
