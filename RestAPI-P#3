@@ -28,3 +28,8 @@ RestAPI Application step-by-step:
  * php artisan make:seeder EventSeeder
  * php artisan make:seeder AttendeeSeeder
  * Used classes: EventFactory, EventSeeder, AttendeeSeeder, DatabaseSeeder, events and attendees migrations
+
+- Eloquent API resources:
+ * Costumize how your data from your eloquent Models is being transformed to JSON responses
+ * Generating resources:
+  -> php artisan make resource EventResource
