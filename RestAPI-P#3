@@ -33,3 +33,8 @@ RestAPI Application step-by-step:
  * Costumize how your data from your eloquent Models is being transformed to JSON responses
  * Generating resources:
   -> php artisan make resource EventResource
+
+- Laravel traits:
+ * The traits are added to classes automatically
+ * You can do them manually, because not really Laravel related, just simple PHP
+ * Mostly it is to REUSE code in Laravel
