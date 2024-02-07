@@ -4,11 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
+use App\Http\Traits\LoadOptionalRelationships;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+
+    use LoadOptionalRelationships;
+
+    private array $relations = ['user', 'attendees', 'attendees.user'];
+
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +37,11 @@ class EventController extends Controller
          * Because when the user relation is LOADED then it will be visible,
          * if not loaded (using the normal Event::all()) then it wont be visible with the user relation
         */
-        return EventResource::collection(Event::with('user')->get());
+        $query = $this->loadRelationships(Event::query());
+
+        return EventResource::collection(
+            $query->latest()->paginate()
+        );
     }
 
     /**
@@ -49,7 +59,7 @@ class EventController extends Controller
             'user_id' => 1
         ]);
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     /**
@@ -63,8 +73,8 @@ class EventController extends Controller
     public function show(Event $event)
     {
         //Resource usage when we want to load also the user relation just at a single data
-        $event->load('user', 'attendees');
-        return new EventResource($event);
+        //$event->load('user', 'attendees');
+        return new EventResource($this->loadRelationships($event));
     }
 
     /**
@@ -82,7 +92,7 @@ class EventController extends Controller
                 'end_time' => 'sometimes|date|after:start_time'
         ]));
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     /**

@@ -22,4 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //It wont register the routes that are specific for displaying forms
 Route::apiResource('events', EventController::class);
-Route::apiResource('events.attendees', AttendeeController::class)->scoped(['attendee' => 'event']);
+Route::apiResource('events.attendees', AttendeeController::class)->scoped()->except(['update']);
